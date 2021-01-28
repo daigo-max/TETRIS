@@ -23,7 +23,7 @@ can.height = SCREEN_H;
 can.style.border = "4px solid #555"
 
 const TETRO_COLORS = [
-    "#000",             //0空
+    "#FFF",              //0白
     "#6CF",              //1水色
     "#F92",              //2オレンジ
     "#66F",              //3青
@@ -117,12 +117,6 @@ function init()
             field[y][x] = 0;
         }
     }
-    //テスト 
-    /*
-    field[0][9] = 1;
-    field[17][1] = 1;
-    field[19][9] = 1; 
-    */
 }
 
 //ブロック一つを描写する
@@ -154,13 +148,21 @@ function drawAll()
         }
     }
 
-//テトリミノを描写する関数
+    //着地点を描写
+    let plus = 0;
+    while( checkMove(0, plus+1) )plus++;
+
+    //テトリミノを描写する関数
     for(let y=0; y<TETRO_SIZE; y++)
     {
         for(let x=0; x<TETRO_SIZE; x++)
         {
+            //テトリミノ本体
             if( tetro[y][x] )
             {
+                //着地点
+                drawBlock(tetro_x + x, tetro_y + y + plus, 0)
+                //本体
                 drawBlock(tetro_x + x, tetro_y + y, tetro_t);
             }
         }
@@ -305,9 +307,9 @@ document.onkeydown = function(e)
         case 37: //左
             if( checkMove(-1, 0) )tetro_x--;
             break;
-        /*case 38: //上
-            if( checkMove(0, -1) )tetro_y--;
-            break;*/
+        case 38: //上(急落下)
+            while( checkMove(0, 1) )tetro_y++;
+            break;
         case 39: //右
             if( checkMove(1, 0) )tetro_x++;
             break;
